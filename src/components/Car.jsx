@@ -38,11 +38,11 @@ const useStyles = makeStyles((theme) => ({
     );
   }
 export default function Car() {
-  const classes = useStyles();
-
+    const classes = useStyles();
     let [data,setdata]=useState([])
     let [owner, setowner] = useState("")
     let [search, setsearch] = useState("")
+    let [nameerror, setname] = useState("")
     let [open, setopen] = useState(false)
     let [id, setid] = useState(0)
     let [car, setcar] = useState("")
@@ -60,21 +60,41 @@ export default function Car() {
     const handleClose = () => {
       setopen(false);
     };
-const addcar=(e)=>{
+    const valid =()=>{
+    if(!/^[a-z]+$/i.test(owner)){
+     var error="string only"
+     setname(error)
+
+     return false
+
+    }
+    
+    return true
+    }
+
+  const  handleChange=(e)=>{
+    setowner(e.target.value)
+    }
+
+const addcar=(e)=>{ 
     e.preventDefault()
+    let isValid=valid()
+    if(isValid){
     if(date1<=date2){
       let result={ id:data.length+1,owner,car,licence,date1,date2}
       setdata([...data,result])
+      setname("")
     }else{
       alert("enter valid date!!")
     }
-    
+  }
     setowner("")
     setcar("")
     setlicence("")
     setdate1("")
     setdate2("")
 }
+
 function remove(id){
     const result=data.filter((e)=>e.id!==id)
     setdata(result)
@@ -90,8 +110,8 @@ function remove(id){
           <h3 style={{marginLeft:"550px",padding:"20px"}}><LocalTaxiIcon color="primary" style={{ fontSize: 40 }}/>Car Parking</h3>
          <form  style={{marginLeft:"450px",border:"1px solid black",display:"inline-block" }}>
          <p style={{marginLeft:"50px"}}>Owner</p>
-        <Input type="text" style={{marginLeft:"50px"}} value={owner} onChange={(e)=>setowner(e.target.value)}/>
-
+        <Input type="text" style={{marginLeft:"50px"}} value={owner} onChange={handleChange}/>
+        <div style={{color:"red",marginLeft:"50px"}}>{nameerror}</div>
          <p style={{marginLeft:"50px"}}>Car</p>
         <Input type="text" style={{marginLeft:"50px"}}value={car} onChange={(e)=>setcar(e.target.value)} />
 
